@@ -179,43 +179,35 @@
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
         import { getFirestore, collection, onSnapshot, query, orderBy } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
-        // --- TEMPAT FIREBASE KENZIE ---
-      const firebaseConfig = {
-      apiKey: "AIzaSyDAhN_BxC9c76kB2jzTJ05F0NXX9ZjRYqQ",
-      authDomain: "themestorekenzie.firebaseapp.com",
-      projectId: "themestorekenzie",
-      storageBucket: "themestorekenzie.firebasestorage.app",
-      messagingSenderId: "220524638997",
-      appId: "1:220524638997:web:a7d4860fb6d2b179a9af1c",
-      measurementId: "G-WTR3T92KWS"
-      };
+        const firebaseConfig = {
+            apiKey: "AIzaSyDAhN_BxC9c76kB2jzTJ05F0NXX9ZjRYqQ",
+            authDomain: "themestorekenzie.firebaseapp.com",
+            projectId: "themestorekenzie",
+            storageBucket: "themestorekenzie.firebasestorage.app",
+            messagingSenderId: "220524638997",
+            appId: "1:220524638997:web:a7d4860fb6d2b179a9af1c",
+            measurementId: "G-WTR3T92KWS"
+        };
 
-        // Initialize Firebase
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
 
-        // Kenzie, kode di bawah ini akan mengambil data otomatis dari Firebase kamu
-        // Jika kamu ingin menghubungkan 'allProducts' ke Firebase, kabari saya ya!
-    </script>
-
-    <script>
-        // Data Produk (Lokal)
-        const allProducts = [
-            { id: 1, type: 'theme', title: 'Purple Night', url: 'https://images.unsplash.com/photo-1550684848-fac1c5b4e853?w=800' },
-            { id: 2, type: 'wallpaper', title: 'Mountain Peak', url: 'https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=800' },
-            { id: 3, type: 'theme', title: 'Cyberpunk UI', url: 'https://images.unsplash.com/photo-1550745165-9bc0b252726f?w=800' },
-            { id: 4, type: 'wallpaper', title: 'City Lights', url: 'https://images.unsplash.com/photo-1519608487953-e999c86e7455?w=800' },
-            { id: 5, type: 'wallpaper', title: 'Green Forest', url: 'https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=800' },
-            { id: 6, type: 'theme', title: 'Minimal White', url: 'https://images.unsplash.com/photo-1477346611705-65d1883cee1e?w=800' },
-            { id: 7, type: 'wallpaper', title: 'Ocean Blue', url: 'https://images.unsplash.com/photo-1505118380757-91f5f5632de0?w=800' },
-            { id: 8, type: 'theme', title: 'Neon Red', url: 'https://images.unsplash.com/photo-1541701494587-cb58502866ab?w=800' }
-        ];
-
+        let allProducts = [];
         let currentFilter = 'all';
         let history = [];
 
-        // Fungsi Render Utama
-        function render(filter = 'all', keyword = '') {
+        // AMBIL DATA DARI FIREBASE (REALTIME)
+        const q = query(collection(db, "assets"), orderBy("createdAt", "desc"));
+        onSnapshot(q, (snapshot) => {
+            allProducts = [];
+            snapshot.forEach((doc) => {
+                allProducts.push({ id: doc.id, ...doc.data() });
+            });
+            render(currentFilter, document.getElementById('searchInput').value);
+        });
+
+        // FUNGSI RENDER
+        window.render = function(filter = 'all', keyword = '') {
             const grid = document.getElementById('mainGrid');
             grid.innerHTML = '';
 
@@ -239,7 +231,7 @@
                         </div>
                         <div class="item-info">
                             <h4>${p.title}</h4>
-                            <button class="btn-dl" id="btn-${p.id}" onclick="startDownload(${p.id})">
+                            <button class="btn-dl" id="btn-${p.id}" onclick="startDownload('${p.id}')">
                                 <i class="ri-download-2-line"></i> Download
                             </button>
                         </div>
@@ -248,28 +240,10 @@
             });
         }
 
-        // Fitur Search "Beneran"
-        document.getElementById('searchInput').addEventListener('input', (e) => {
-            render(currentFilter, e.target.value);
-        });
-
-        // Fitur Ganti Tab
-        function changeTab(type, el) {
-            currentFilter = type;
-            document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
-            el.classList.add('active');
-            
-            const titles = { 'all': 'Koleksi Terbaru', 'theme': 'Premium Themes', 'wallpaper': 'HD Wallpapers' };
-            document.getElementById('pageTitle').innerText = titles[type];
-            
-            render(type, document.getElementById('searchInput').value);
-        }
-
-        // Fitur Download "Beneran"
-        async function startDownload(id) {
+        // DOWNLOAD LOGIC
+        window.startDownload = async function(id) {
             const item = allProducts.find(p => p.id === id);
             const btn = document.getElementById(`btn-${id}`);
-            
             btn.disabled = true;
             btn.innerHTML = `<i class="ri-loader-4-line" style="animation: spin 1s infinite linear;"></i>`;
 
@@ -277,42 +251,34 @@
                 const response = await fetch(item.url);
                 const blob = await response.blob();
                 const url = window.URL.createObjectURL(blob);
-                
                 const link = document.createElement('a');
                 link.href = url;
                 link.download = `KenzieStore_${item.title.replace(/\s/g, '_')}.jpg`;
                 document.body.appendChild(link);
                 link.click();
                 document.body.removeChild(link);
-
-                saveToHistory(item);
                 
+                saveToHistory(item);
                 btn.innerHTML = `<i class="ri-check-line"></i> Done`;
-                setTimeout(() => {
-                    btn.disabled = false;
-                    btn.innerHTML = `<i class="ri-download-2-line"></i> Download`;
-                }, 2000);
+                setTimeout(() => { btn.disabled = false; btn.innerHTML = `<i class="ri-download-2-line"></i> Download`; }, 2000);
             } catch (err) {
-                alert("Gagal mendownload. Pastikan koneksi internet aktif.");
+                alert("Gagal download!");
                 btn.disabled = false;
                 btn.innerHTML = `<i class="ri-download-2-line"></i> Download`;
             }
-        }
+        };
 
-        // Simpan ke History
         function saveToHistory(item) {
             const now = new Date();
             const timeStr = now.getHours() + ":" + now.getMinutes().toString().padStart(2, '0');
             history.unshift({ ...item, time: timeStr });
-            
             const badge = document.getElementById('badgeCount');
             badge.style.display = 'block';
             badge.innerText = history.length;
-
             updateHistoryUI();
         }
 
-        function updateHistoryUI() {
+        window.updateHistoryUI = function() {
             const list = document.getElementById('historyList');
             list.innerHTML = history.map(h => `
                 <div class="history-item active-page">
@@ -325,16 +291,27 @@
             `).join('');
         }
 
-        function toggleHistory() {
+        window.toggleHistory = function() {
             const panel = document.getElementById('historyPanel');
             panel.style.display = (panel.style.display === 'block') ? 'none' : 'block';
         }
 
+        window.changeTab = function(type, el) {
+            currentFilter = type;
+            document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
+            el.classList.add('active');
+            const titles = { 'all': 'Koleksi Terbaru', 'theme': 'Premium Themes', 'wallpaper': 'HD Wallpapers' };
+            document.getElementById('pageTitle').innerText = titles[type];
+            render(type, document.getElementById('searchInput').value);
+        }
+
+        document.getElementById('searchInput').addEventListener('input', (e) => {
+            render(currentFilter, e.target.value);
+        });
+
         const style = document.createElement('style');
         style.innerHTML = `@keyframes spin { to { transform: rotate(360deg); } }`;
         document.head.appendChild(style);
-
-        render();
     </script>
 </body>
 </html>
