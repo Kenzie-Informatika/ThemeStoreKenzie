@@ -7,16 +7,18 @@
     <link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet">
     <style>
         :root {
-            --primary: #6c5ce7;
-            --dark: #1a1a1a;
-            --bg: #f4f6f9;
+            --primary: #7b61ff;
+            --dark: #0a0a0a;
+            --card-bg: #161616;
+            --bg: #000000; /* Background Hitam */
+            --text: #ffffff;
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
         
         body { 
             background: var(--bg); 
-            color: var(--dark); 
+            color: var(--text); 
             padding-bottom: 110px; 
             min-height: 100vh;
             overflow-x: hidden;
@@ -31,23 +33,51 @@
             from { transform: translateY(100%); }
             to { transform: translateY(0); }
         }
+        @keyframes liquidFlow {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
 
         .active-page { animation: fadeInUp 0.4s ease forwards; }
 
         /* --- Header --- */
         header {
-            background: white; padding: 15px 5%; display: flex; justify-content: space-between;
-            align-items: center; box-shadow: 0 2px 15px rgba(0,0,0,0.05); position: sticky; top: 0; z-index: 100;
+            background: rgba(0, 0, 0, 0.8); 
+            padding: 15px 5%; 
+            display: flex; 
+            justify-content: space-between;
+            align-items: center; 
+            backdrop-filter: blur(10px);
+            position: sticky; 
+            top: 0; 
+            z-index: 100;
+            border-bottom: 1px solid #222;
         }
 
+        /* --- SEARCH LIQUID GLASS STYLE --- */
         .search-container { position: relative; width: 180px; }
         .search-container input {
-            width: 100%; padding: 10px 15px 10px 35px;
-            border-radius: 25px; border: 2px solid #f1f1f1; outline: none;
-            background: #f8f9fa; transition: 0.3s; font-size: 0.8rem;
+            width: 100%; 
+            padding: 10px 15px 10px 35px;
+            border-radius: 25px; 
+            border: 1px solid rgba(255, 255, 255, 0.1); 
+            outline: none;
+            /* Efek Kaca Cair */
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(15px);
+            color: #fff;
+            transition: 0.4s cubic-bezier(0.4, 0, 0.2, 1); 
+            font-size: 0.8rem;
+            box-shadow: inset 0 0 10px rgba(255,255,255,0.05);
         }
-        .search-container input:focus { width: 220px; border-color: var(--primary); background: #fff; }
-        .search-container i { position: absolute; left: 12px; top: 10px; color: #aaa; }
+        .search-container input:focus { 
+            width: 220px; 
+            border-color: var(--primary); 
+            background: rgba(123, 97, 255, 0.1); 
+            box-shadow: 0 0 20px rgba(123, 97, 255, 0.2);
+        }
+        .search-container i { position: absolute; left: 12px; top: 10px; color: var(--primary); }
 
         /* --- Main Content --- */
         main { padding: 25px 5%; }
@@ -57,68 +87,78 @@
         }
 
         .item-card {
-            background: white; border-radius: 20px; overflow: hidden;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.05); transition: 0.3s; cursor: pointer;
+            background: var(--card-bg); 
+            border-radius: 20px; 
+            overflow: hidden;
+            border: 1px solid #222;
+            transition: 0.3s; 
+            cursor: pointer;
         }
-        .item-card:hover { transform: scale(1.02); }
+        .item-card:hover { transform: translateY(-5px); border-color: var(--primary); }
         .img-box { width: 100%; height: 250px; overflow: hidden; position: relative; }
         .img-box img { width: 100%; height: 100%; object-fit: cover; }
         .tag {
             position: absolute; top: 10px; left: 10px;
-            background: rgba(108, 92, 231, 0.9); color: white;
+            background: var(--primary); color: white;
             padding: 4px 10px; border-radius: 12px; font-size: 0.6rem; font-weight: bold;
         }
         .item-info { padding: 12px; text-align: center; }
-        .item-info h4 { font-size: 0.85rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .item-info h4 { font-size: 0.85rem; color: #eee; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 
-        /* --- Preview Layer (Style Infinix) --- */
+        /* --- Preview Layer --- */
         .preview-overlay {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.8); backdrop-filter: blur(5px);
+            background: rgba(0,0,0,0.9); backdrop-filter: blur(10px);
             z-index: 2000; display: none; justify-content: center; align-items: flex-end;
         }
         .preview-content {
-            width: 100%; max-width: 500px; background: white;
+            width: 100%; max-width: 500px; background: #111;
             border-radius: 30px 30px 0 0; position: relative;
             animation: slideUp 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-            max-height: 90vh; overflow-y: auto;
+            max-height: 90vh; overflow-y: auto; border-top: 1px solid #333;
         }
         .preview-img { width: 100%; height: 450px; object-fit: cover; }
-        .preview-details { padding: 25px; }
+        .preview-details { padding: 25px; color: #fff; }
         .preview-details h2 { font-size: 1.5rem; margin-bottom: 5px; }
-        .preview-details p { color: #666; font-size: 0.9rem; margin-bottom: 20px; line-height: 1.5; }
+        .preview-details p { color: #aaa; font-size: 0.9rem; margin-bottom: 20px; line-height: 1.5; }
         
         .close-preview {
             position: absolute; top: 20px; right: 20px; width: 40px; height: 40px;
-            background: rgba(255,255,255,0.9); border-radius: 50%;
+            background: rgba(255,255,255,0.1); color: #fff; border-radius: 50%;
             display: flex; align-items: center; justify-content: center; cursor: pointer; z-index: 10;
         }
 
+        /* --- LIQUID GLASS DOWNLOAD BUTTON --- */
         .btn-full-dl {
-            width: 100%; padding: 15px; background: var(--primary);
-            color: white; border: none; border-radius: 15px; cursor: pointer;
+            width: 100%; padding: 16px; 
+            background: linear-gradient(-45deg, #6c5ce7, #a29bfe, #6c5ce7);
+            background-size: 400% 400%;
+            animation: liquidFlow 3s ease infinite;
+            color: white; border: none; border-radius: 20px; cursor: pointer;
             font-size: 1rem; font-weight: 700; display: flex; align-items: center; justify-content: center; gap: 10px;
+            box-shadow: 0 10px 20px rgba(108, 92, 231, 0.3);
         }
 
-        /* --- Bottom Nav & History --- */
+        /* --- Bottom Nav --- */
         .bottom-bar {
             position: fixed; bottom: 25px; left: 50%; transform: translateX(-50%);
-            background: rgba(255, 255, 255, 0.9); backdrop-filter: blur(20px);
+            background: rgba(20, 20, 20, 0.8); backdrop-filter: blur(20px);
             padding: 12px 35px; border-radius: 40px; display: flex; gap: 40px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.1); z-index: 1000;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5); z-index: 1000;
+            border: 1px solid #333;
         }
-        .nav-item { text-align: center; color: #b2bec3; cursor: pointer; }
+        .nav-item { text-align: center; color: #555; cursor: pointer; }
         .nav-item.active { color: var(--primary); }
         .nav-item i { font-size: 1.4rem; }
         .nav-item span { display: block; font-size: 0.6rem; font-weight: 700; }
-        .badge { position: absolute; top: -5px; right: -5px; background: #ff4757; color: white; font-size: 0.6rem; padding: 2px 6px; border-radius: 10px; display: none; }
         
         #historyPanel {
             position: fixed; bottom: 100px; left: 50%; transform: translateX(-50%);
-            width: 320px; background: white; border-radius: 25px; padding: 20px; display: none; z-index: 999;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            width: 320px; background: #161616; color: #fff; border-radius: 25px; padding: 20px; display: none; z-index: 999;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.6); border: 1px solid #333;
         }
 
+        .badge { position: absolute; top: -5px; right: -5px; background: #ff4757; color: white; font-size: 0.6rem; padding: 2px 6px; border-radius: 10px; display: none; }
         @keyframes spin { to { transform: rotate(360deg); } }
         .animate-spin { animation: spin 1s infinite linear; }
     </style>
@@ -126,15 +166,15 @@
 <body>
 
     <header>
-        <div style="font-weight: 900; font-size: 1.1rem;">KENZIE <span style="color:var(--primary)">STORE</span></div>
+        <div style="font-weight: 900; font-size: 1.1rem; color: #fff;">KENZIE <span style="color:var(--primary)">STORE</span></div>
         <div class="search-container">
             <i class="ri-search-2-line"></i>
-            <input type="text" id="searchInput" placeholder="Cari...">
+            <input type="text" id="searchInput" placeholder="Cari karya...">
         </div>
     </header>
 
     <main>
-        <h3 id="pageTitle" style="margin-bottom: 15px;">Koleksi Terbaru</h3>
+        <h3 id="pageTitle" style="margin-bottom: 15px; color: #fff;">Koleksi Terbaru</h3>
         <div class="grid" id="mainGrid"></div>
     </main>
 
@@ -145,7 +185,7 @@
             <div class="preview-details">
                 <span id="p-tag" class="tag" style="position: static; display: inline-block; margin-bottom: 10px;"></span>
                 <h2 id="p-title">Theme Name</h2>
-                <p id="p-desc">Ini adalah deskripsi karya Kenzie. Desain premium dengan kualitas HD yang akan mempercantik tampilan HP kamu secara instan.</p>
+                <p id="p-desc">Desain premium oleh Kenzie Store.</p>
                 
                 <button id="p-dl-btn" class="btn-full-dl">
                     <i class="ri-download-cloud-2-line"></i> Terapkan Sekarang
@@ -167,9 +207,7 @@
     </div>
 
     <script>
-        // ==========================================
-        //  TEMPAT API KEYS (Update di sini Kenzie)
-        // ==========================================
+        // API KEY TETAP AMAN DI SINI
         const firebaseConfig = {
           apiKey: "AIzaSyDAhN_BxC9c76kB2jzTJ05F0NXX9ZjRYqQ",
           authDomain: "themestorekenzie.firebaseapp.com",
@@ -181,9 +219,6 @@
           measurementId: "G-WTR3T92KWS"
         };
 
-        // ==========================================
-
-        // Data Dummy Kenzie
         const allProducts = [
             { id: 1, type: 'theme', title: 'Purple Night', desc: 'Tema elegan dengan perpaduan warna ungu gelap dan neon.', url: 'https://images.unsplash.com/photo-1550684848-fac1c5b4e853?w=800' },
             { id: 2, type: 'wallpaper', title: 'Mountain Peak', desc: 'Pemandangan gunung bersalju dengan langit biru jernih.', url: 'https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=800' },
@@ -215,10 +250,8 @@
             document.getElementById('p-img').src = item.url;
             document.getElementById('p-title').innerText = item.title;
             document.getElementById('p-tag').innerText = item.type;
-            document.getElementById('p-desc').innerText = item.desc || "Koleksi premium dari Kenzie Store. Klik tombol di bawah untuk mengunduh karya ini secara gratis.";
-            
+            document.getElementById('p-desc').innerText = item.desc || "Koleksi premium dari Kenzie Store.";
             document.getElementById('p-dl-btn').onclick = () => startDownload(item);
-            
             document.getElementById('previewLayer').style.display = 'flex';
             document.body.style.overflow = 'hidden';
         }
@@ -230,4 +263,63 @@
 
         async function startDownload(item) {
             const btn = document.getElementById('p-dl-btn');
-            btn.innerHTML = `<i class="
+            btn.innerHTML = `<i class="ri-loader-4-line animate-spin"></i> Menyiapkan...`;
+            try {
+                const response = await fetch(item.url);
+                const blob = await response.blob();
+                const url = window.URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = `Kenzie_${item.title}.jpg`;
+                document.body.appendChild(a);
+                a.click();
+                btn.innerHTML = `<i class="ri-check-line"></i> Tersimpan!`;
+                saveToHistory(item);
+                setTimeout(() => { 
+                    btn.innerHTML = `<i class="ri-download-cloud-2-line"></i> Terapkan Sekarang`;
+                    closePreview();
+                }, 1500);
+            } catch (err) {
+                alert("Gagal download!");
+                btn.innerHTML = `<i class="ri-download-cloud-2-line"></i> Coba Lagi`;
+            }
+        }
+
+        function saveToHistory(item) {
+            if(!history.find(h => h.id === item.id)) {
+                history.unshift(item);
+                document.getElementById('badgeCount').style.display = 'block';
+                document.getElementById('badgeCount').innerText = history.length;
+                updateHistoryUI();
+            }
+        }
+
+        function updateHistoryUI() {
+            const list = document.getElementById('historyList');
+            list.innerHTML = history.map(h => `
+                <div style="display:flex; align-items:center; gap:10px; margin-bottom:10px;">
+                    <img src="${h.url}" style="width:40px; height:40px; border-radius:8px; object-fit:cover;">
+                    <span style="font-size:0.8rem; color:#fff;">${h.title}</span>
+                </div>
+            `).join('');
+        }
+
+        function toggleHistory() {
+            const p = document.getElementById('historyPanel');
+            p.style.display = p.style.display === 'block' ? 'none' : 'block';
+        }
+
+        function changeTab(type, el) {
+            document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
+            el.classList.add('active');
+            render(type);
+        }
+
+        document.getElementById('searchInput').addEventListener('input', (e) => {
+            render('all', e.target.value);
+        });
+
+        render();
+    </script>
+</body>
+</html>
