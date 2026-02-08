@@ -282,6 +282,10 @@
         const analytics = getAnalytics(app);
         let localProducts = [];
 
+        import { initializeApp } from "firebase/app";
+        import { getAnalytics } from "firebase/analytics";
+
+
         // 1. Theme Toggle Logic
         function toggleTheme() {
             document.body.classList.toggle('light-mode');
