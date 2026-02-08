@@ -7,12 +7,27 @@
     <link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet">
     <style>
         :root {
+            /* Dark Mode (Default) */
             --primary: #a29bfe;
             --accent: #6c5ce7;
             --dark-bg: #0a0a0c;
+            --bg-gradient: radial-gradient(circle at 50% -20%, #2d3436 0%, #0a0a0c 80%);
+            --text: #ffffff;
             --glass: rgba(255, 255, 255, 0.03);
             --liquid-glass: rgba(255, 255, 255, 0.08);
             --border: rgba(255, 255, 255, 0.1);
+            --card-info: linear-gradient(to top, rgba(0,0,0,0.9) 0%, transparent 100%);
+        }
+
+        /* Light Mode Styles */
+        body.light-mode {
+            --dark-bg: #f0f2f5;
+            --bg-gradient: radial-gradient(circle at 50% -20%, #ffffff 0%, #f0f2f5 80%);
+            --text: #1a1a1a;
+            --glass: rgba(0, 0, 0, 0.03);
+            --liquid-glass: rgba(255, 255, 255, 0.7);
+            --border: rgba(0, 0, 0, 0.08);
+            --card-info: linear-gradient(to top, rgba(255,255,255,0.95) 0%, transparent 100%);
         }
 
         * { 
@@ -24,13 +39,42 @@
         
         body { 
             background: var(--dark-bg); 
-            background-image: radial-gradient(circle at 50% -20%, #2d3436 0%, #0a0a0c 80%);
-            color: #ffffff; 
+            background-image: var(--bg-gradient);
+            color: var(--text); 
             padding-bottom: 120px; 
             min-height: 100vh;
             overflow-x: hidden;
             -webkit-tap-highlight-color: transparent;
+            transition: background 0.5s ease, color 0.5s ease;
         }
+
+        /* --- Theme Toggle Switch --- */
+        .theme-switch {
+            position: fixed;
+            right: 25px;
+            bottom: 110px;
+            width: 50px;
+            height: 50px;
+            background: var(--accent);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            z-index: 1600;
+            box-shadow: 0 10px 25px rgba(108, 92, 231, 0.4);
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            border: none;
+            color: white;
+        }
+        
+        .theme-switch:active { transform: scale(0.8); }
+        .theme-switch i { font-size: 1.4rem; position: absolute; transition: 0.5s cubic-bezier(0.4, 0, 0.2, 1); }
+        
+        /* Animasi Ikon */
+        .light-mode .ri-moon-fill { transform: rotate(360deg) scale(0); opacity: 0; }
+        .ri-sun-fill { transform: rotate(-360deg) scale(0); opacity: 0; }
+        .light-mode .ri-sun-fill { transform: rotate(0) scale(1); opacity: 1; }
 
         /* --- Liquid Taskbar Atas --- */
         header {
@@ -60,9 +104,9 @@
         .search-container input {
             width: 100%; padding: 10px 15px 10px 35px;
             border-radius: 14px; border: 1px solid var(--border); outline: none;
-            background: var(--glass); color: white; transition: 0.4s; font-size: 0.8rem;
+            background: var(--glass); color: var(--text); transition: 0.4s; font-size: 0.8rem;
         }
-        .search-container input:focus { width: 180px; background: rgba(255,255,255,0.1); border-color: var(--primary); }
+        .search-container input:focus { width: 180px; background: rgba(108, 92, 231, 0.1); border-color: var(--primary); }
         .search-container i { position: absolute; left: 12px; top: 10px; color: #888; }
 
         /* --- Main Content --- */
@@ -97,7 +141,7 @@
             transform: translateY(-10px) scale(1.02); 
             background: var(--liquid-glass);
             border-color: var(--primary);
-            box-shadow: 0 25px 50px rgba(0,0,0,0.5);
+            box-shadow: 0 25px 50px rgba(0,0,0,0.2);
         }
 
         .img-box { width: 100%; height: 280px; overflow: hidden; position: relative; }
@@ -108,16 +152,16 @@
             position: absolute; top: 15px; left: 15px;
             background: rgba(0, 0, 0, 0.5); 
             backdrop-filter: blur(12px);
-            color: var(--primary);
+            color: #fff;
             padding: 6px 14px; border-radius: 12px; font-size: 0.6rem; font-weight: 800;
-            border: 1px solid var(--border);
+            border: 1px solid rgba(255,255,255,0.1);
             text-transform: uppercase;
             z-index: 2;
         }
 
         .item-info { 
             padding: 20px 15px; 
-            background: linear-gradient(to top, rgba(0,0,0,0.9) 0%, transparent 100%); 
+            background: var(--card-info); 
             position: absolute; 
             bottom: 0; 
             width: 100%; 
@@ -132,7 +176,7 @@
             z-index: 2000; display: none; justify-content: center; align-items: flex-end;
         }
         .preview-content {
-            width: 100%; max-width: 500px; background: #121214;
+            width: 100%; max-width: 500px; background: var(--dark-bg);
             border-radius: 40px 40px 0 0; position: relative;
             border: 1px solid var(--border);
             max-height: 90vh; overflow-y: auto;
@@ -147,20 +191,19 @@
             font-size: 1.1rem; font-weight: 700; display: flex; align-items: center; justify-content: center; gap: 12px;
             transition: 0.3s;
         }
-        .btn-apply:active { transform: scale(0.95); opacity: 0.8; }
 
         /* --- Bottom Nav Glass --- */
         .bottom-bar {
             position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%);
-            background: rgba(255, 255, 255, 0.06); 
+            background: var(--liquid-glass); 
             backdrop-filter: blur(30px);
             -webkit-backdrop-filter: blur(30px);
             padding: 16px 35px; border-radius: 35px; display: flex; gap: 40px;
             border: 1px solid var(--border);
-            box-shadow: 0 20px 40px rgba(0,0,0,0.6); z-index: 1500;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.15); z-index: 1500;
         }
-        .nav-item { text-align: center; color: rgba(255,255,255,0.3); cursor: pointer; transition: 0.3s; }
-        .nav-item.active { color: var(--primary); transform: translateY(-3px); }
+        .nav-item { text-align: center; color: var(--text); opacity: 0.4; cursor: pointer; transition: 0.3s; }
+        .nav-item.active { color: var(--accent); opacity: 1; transform: translateY(-3px); }
         .nav-item i { font-size: 1.6rem; }
         .nav-item span { display: block; font-size: 0.65rem; margin-top: 5px; font-weight: 700; }
 
@@ -174,6 +217,11 @@
 </head>
 <body>
 
+    <button class="theme-switch" onclick="toggleTheme()" id="themeBtn">
+        <i class="ri-moon-fill"></i>
+        <i class="ri-sun-fill"></i>
+    </button>
+
     <header id="mainHeader">
         <div class="logo">KENZIE <span>STORE</span></div>
         <div class="search-container">
@@ -185,23 +233,22 @@
     <main>
         <div class="section-header">
             <h2 style="font-size: 1.4rem;">Premium Works</h2>
-            <i class="ri-equalizer-line" style="color: var(--primary); font-size: 1.2rem;"></i>
+            <i class="ri-equalizer-line" style="color: var(--accent); font-size: 1.2rem;"></i>
         </div>
         
-        <div class="grid" id="mainGrid">
-            </div>
+        <div class="grid" id="mainGrid"></div>
     </main>
 
     <div id="previewLayer" class="preview-overlay">
         <div class="preview-content">
-            <div style="position:absolute; top:25px; right:25px; z-index:100; background:rgba(0,0,0,0.6); backdrop-filter:blur(10px); width:45px; height:45px; border-radius:50%; display:flex; align-items:center; justify-content:center; border:1px solid var(--border);" onclick="closePreview()">
+            <div style="position:absolute; top:25px; right:25px; z-index:100; background:rgba(0,0,0,0.5); backdrop-filter:blur(10px); width:45px; height:45px; border-radius:50%; display:flex; align-items:center; justify-content:center; border:1px solid rgba(255,255,255,0.1); color:white;" onclick="closePreview()">
                 <i class="ri-close-line" style="font-size: 1.5rem;"></i>
             </div>
             <img id="p-img" src="" class="preview-img">
             <div class="preview-details">
-                <div id="p-tag" style="color:var(--primary); font-weight:800; font-size:0.7rem; text-transform:uppercase; margin-bottom:8px;">TYPE</div>
+                <div id="p-tag" style="color:var(--accent); font-weight:800; font-size:0.7rem; text-transform:uppercase; margin-bottom:8px;">TYPE</div>
                 <h2 id="p-title" style="font-size:1.8rem; margin-bottom:15px;">Project Name</h2>
-                <p id="p-desc" style="color:#aaa; line-height:1.6; margin-bottom:30px; font-size:0.95rem;">Memuat deskripsi...</p>
+                <p id="p-desc" style="color:#888; line-height:1.6; margin-bottom:30px; font-size:0.95rem;">Memuat deskripsi...</p>
                 <button id="p-dl-btn" class="btn-apply">
                     <i class="ri-magic-line"></i> Apply Now
                 </button>
@@ -220,18 +267,34 @@
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
 
     <script>
-        // --- KONFIGURASI FIREBASE ---
-        // Ganti URL dibawah dengan URL Firebase Realtime Database milikmu
         const firebaseConfig = {
-            databaseURL: "ISI_URL_DATABASE_FIREBASE_KAMU_DISINI"
-        };
+          apiKey: "AIzaSyDAhN_BxC9c76kB2jzTJ05F0NXX9ZjRYqQ",
+          authDomain: "themestorekenzie.firebaseapp.com",
+          databaseURL: "https://themestorekenzie-default-rtdb.asia-southeast1.firebasedatabase.app",
+          projectId: "themestorekenzie",
+          storageBucket: "themestorekenzie.firebasestorage.app",
+          messagingSenderId: "220524638997",
+          appId: "1:220524638997:web:a7d4860fb6d2b179a9af1c",
+          measurementId: "G-WTR3T92KWS"
+         };
 
         firebase.initializeApp(firebaseConfig);
         const database = firebase.database();
-
         let localProducts = [];
 
-        // 1. Efek Blur Header saat Scroll
+        // 1. Theme Toggle Logic
+        function toggleTheme() {
+            document.body.classList.toggle('light-mode');
+            const isLight = document.body.classList.contains('light-mode');
+            localStorage.setItem('kenzie-theme', isLight ? 'light' : 'dark');
+        }
+
+        // Load Saved Theme
+        if (localStorage.getItem('kenzie-theme') === 'light') {
+            document.body.classList.add('light-mode');
+        }
+
+        // 2. Scroll Blur
         window.onscroll = function() {
             const header = document.getElementById("mainHeader");
             if (document.body.scrollTop > 30 || document.documentElement.scrollTop > 30) {
@@ -241,25 +304,19 @@
             }
         };
 
-        // 2. Ambil Data dari Firebase & Tampilkan
+        // 3. Firebase Render
         function render(filter = 'all', keyword = '') {
             const grid = document.getElementById('mainGrid');
-            
             database.ref('products').on('value', (snapshot) => {
                 const data = snapshot.val();
                 grid.innerHTML = '';
                 localProducts = [];
-
                 if (data) {
-                    Object.keys(data).forEach(key => {
-                        localProducts.push({ id: key, ...data[key] });
-                    });
-
+                    Object.keys(data).forEach(key => localProducts.push({ id: key, ...data[key] }));
                     const filtered = localProducts.filter(p => 
                         (filter === 'all' || p.type === filter) && 
                         p.title.toLowerCase().includes(keyword.toLowerCase())
                     );
-                    
                     filtered.forEach((p, index) => {
                         const card = document.createElement('div');
                         card.className = 'item-card';
@@ -282,16 +339,14 @@
             });
         }
 
-        // 3. Logic Preview
+        // 4. Preview & Search
         function openPreview(id) {
             const item = localProducts.find(p => p.id === id);
             if(!item) return;
-
             document.getElementById('p-img').src = item.url;
             document.getElementById('p-title').innerText = item.title;
             document.getElementById('p-tag').innerText = item.type;
             document.getElementById('p-desc').innerText = item.desc || "Karya premium eksklusif dari Kenzie Store.";
-            
             document.getElementById('previewLayer').style.display = 'flex';
             document.body.style.overflow = 'hidden';
         }
@@ -301,7 +356,6 @@
             document.body.style.overflow = 'auto';
         }
 
-        // 4. Tab & Search Control
         function changeTab(type, el) {
             document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
             el.classList.add('active');
@@ -312,7 +366,6 @@
             render('all', e.target.value);
         });
 
-        // Inisialisasi awal
         render();
     </script>
 </body>
