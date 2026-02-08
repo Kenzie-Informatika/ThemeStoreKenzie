@@ -19,7 +19,6 @@
             --card-info: linear-gradient(to top, rgba(0,0,0,0.9) 0%, transparent 100%);
         }
 
-        /* Light Mode Styles */
         body.light-mode {
             --dark-bg: #f0f2f5;
             --bg-gradient: radial-gradient(circle at 50% -20%, #ffffff 0%, #f0f2f5 80%);
@@ -41,42 +40,38 @@
             background: var(--dark-bg); 
             background-image: var(--bg-gradient);
             color: var(--text); 
-            padding-bottom: 120px; 
+            padding-bottom: 150px; 
             min-height: 100vh;
             overflow-x: hidden;
             -webkit-tap-highlight-color: transparent;
             transition: background 0.5s ease, color 0.5s ease;
         }
 
-        /* --- Theme Toggle Switch --- */
+        /* --- Theme Toggle Switch (Pindah ke Atas) --- */
         .theme-switch {
-            position: fixed;
-            right: 25px;
-            bottom: 110px;
-            width: 50px;
-            height: 50px;
+            width: 40px;
+            height: 40px;
             background: var(--accent);
-            border-radius: 50%;
+            border-radius: 12px;
             display: flex;
             align-items: center;
             justify-content: center;
             cursor: pointer;
-            z-index: 1600;
-            box-shadow: 0 10px 25px rgba(108, 92, 231, 0.4);
+            box-shadow: 0 8px 15px rgba(108, 92, 231, 0.3);
             transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
             border: none;
             color: white;
+            flex-shrink: 0;
+            margin-left: 15px;
         }
         
-        .theme-switch:active { transform: scale(0.8); }
-        .theme-switch i { font-size: 1.4rem; position: absolute; transition: 0.5s cubic-bezier(0.4, 0, 0.2, 1); }
-        
-        /* Animasi Ikon */
+        .theme-switch:active { transform: scale(0.9); }
+        .theme-switch i { font-size: 1.2rem; position: absolute; transition: 0.5s cubic-bezier(0.4, 0, 0.2, 1); }
         .light-mode .ri-moon-fill { transform: rotate(360deg) scale(0); opacity: 0; }
         .ri-sun-fill { transform: rotate(-360deg) scale(0); opacity: 0; }
         .light-mode .ri-sun-fill { transform: rotate(0) scale(1); opacity: 1; }
 
-        /* --- Liquid Taskbar Atas --- */
+        /* --- Header --- */
         header {
             background: rgba(10, 10, 12, 0);
             padding: 25px 6%; 
@@ -100,13 +95,15 @@
         .logo { font-weight: 900; font-size: 1.3rem; letter-spacing: 1px; }
         .logo span { color: var(--primary); }
 
+        .header-actions { display: flex; align-items: center; }
+
         .search-container { position: relative; width: 140px; }
         .search-container input {
             width: 100%; padding: 10px 15px 10px 35px;
             border-radius: 14px; border: 1px solid var(--border); outline: none;
             background: var(--glass); color: var(--text); transition: 0.4s; font-size: 0.8rem;
         }
-        .search-container input:focus { width: 180px; background: rgba(108, 92, 231, 0.1); border-color: var(--primary); }
+        .search-container input:focus { width: 160px; background: rgba(108, 92, 231, 0.1); border-color: var(--primary); }
         .search-container i { position: absolute; left: 12px; top: 10px; color: #888; }
 
         /* --- Main Content --- */
@@ -119,13 +116,56 @@
             animation: fadeIn 0.8s ease;
         }
 
+        /* --- Filter Button Liquid (BARU) --- */
+        .filter-container {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 30px;
+        }
+
+        .liquid-filter {
+            background: var(--liquid-glass);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid var(--border);
+            padding: 5px;
+            border-radius: 20px;
+            display: flex;
+            width: fit-content;
+        }
+
+        .filter-btn {
+            padding: 10px 20px;
+            border-radius: 16px;
+            border: none;
+            background: transparent;
+            color: var(--text);
+            font-size: 0.85rem;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: 0.3s;
+            opacity: 0.6;
+        }
+
+        .filter-btn.active {
+            background: linear-gradient(135deg, #ff7e5f, #feb47b); /* Gradient sesuai gambar */
+            color: white;
+            opacity: 1;
+            box-shadow: 0 5px 15px rgba(255, 126, 95, 0.3);
+        }
+
+        .filter-btn i { font-size: 1.1rem; }
+
+        /* --- Grid & Card --- */
         .grid {
             display: grid; 
             grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
             gap: 20px; 
         }
 
-        /* --- Card Design Liquid --- */
         .item-card {
             background: var(--glass);
             border: 1px solid var(--border);
@@ -169,7 +209,7 @@
         }
         .item-info h4 { font-size: 0.95rem; font-weight: 600; letter-spacing: 0.5px; }
 
-        /* --- Liquid Preview Overlay --- */
+        /* --- Overlay & Preview --- */
         .preview-overlay {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: rgba(0,0,0,0.8); backdrop-filter: blur(20px);
@@ -192,7 +232,7 @@
             transition: 0.3s;
         }
 
-        /* --- Bottom Nav Glass --- */
+        /* --- Bottom Nav --- */
         .bottom-bar {
             position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%);
             background: var(--liquid-glass); 
@@ -207,7 +247,7 @@
         .nav-item i { font-size: 1.6rem; }
         .nav-item span { display: block; font-size: 0.65rem; margin-top: 5px; font-weight: 700; }
 
-        /* --- Animations --- */
+        /* Animations */
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
         @keyframes slideUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
         @keyframes sheetUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
@@ -217,16 +257,17 @@
 </head>
 <body>
 
-    <button class="theme-switch" onclick="toggleTheme()" id="themeBtn">
-        <i class="ri-moon-fill"></i>
-        <i class="ri-sun-fill"></i>
-    </button>
-
     <header id="mainHeader">
         <div class="logo">KENZIE <span>STORE</span></div>
-        <div class="search-container">
-            <i class="ri-search-2-line"></i>
-            <input type="text" id="searchInput" placeholder="Cari...">
+        <div class="header-actions">
+            <div class="search-container">
+                <i class="ri-search-2-line"></i>
+                <input type="text" id="searchInput" placeholder="Cari...">
+            </div>
+            <button class="theme-switch" onclick="toggleTheme()" id="themeBtn">
+                <i class="ri-moon-fill"></i>
+                <i class="ri-sun-fill"></i>
+            </button>
         </div>
     </header>
 
@@ -234,6 +275,17 @@
         <div class="section-header">
             <h2 style="font-size: 1.4rem;">Premium Works</h2>
             <i class="ri-equalizer-line" style="color: var(--accent); font-size: 1.2rem;"></i>
+        </div>
+
+        <div class="filter-container">
+            <div class="liquid-filter">
+                <button class="filter-btn active" onclick="setSort('populer', this)">
+                    <i class="ri-fire-fill"></i> Populer
+                </button>
+                <button class="filter-btn" onclick="setSort('terbaru', this)">
+                    <i class="ri-time-fill"></i> Terbaru
+                </button>
+            </div>
         </div>
         
         <div class="grid" id="mainGrid"></div>
@@ -280,19 +332,19 @@
         firebase.initializeApp(firebaseConfig);
         const database = firebase.database();
 
-        // 1. Theme Toggle Logic
+        let currentFilter = 'all';
+        let currentSort = 'populer';
+
         function toggleTheme() {
             document.body.classList.toggle('light-mode');
             const isLight = document.body.classList.contains('light-mode');
             localStorage.setItem('kenzie-theme', isLight ? 'light' : 'dark');
         }
 
-        // Load Saved Theme
         if (localStorage.getItem('kenzie-theme') === 'light') {
             document.body.classList.add('light-mode');
         }
 
-        // 2. Scroll Blur
         window.onscroll = function() {
             const header = document.getElementById("mainHeader");
             if (document.body.scrollTop > 30 || document.documentElement.scrollTop > 30) {
@@ -302,8 +354,15 @@
             }
         };
 
-        // 3. Firebase Render
+        function setSort(type, el) {
+            document.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active'));
+            el.classList.add('active');
+            currentSort = type;
+            render(currentFilter);
+        }
+
         function render(filter = 'all', keyword = '') {
+            currentFilter = filter;
             const grid = document.getElementById('mainGrid');
             database.ref('products').on('value', (snapshot) => {
                 const data = snapshot.val();
@@ -311,6 +370,10 @@
                 localProducts = [];
                 if (data) {
                     Object.keys(data).forEach(key => localProducts.push({ id: key, ...data[key] }));
+                    
+                    // Logic sorting sederhana
+                    if(currentSort === 'terbaru') localProducts.reverse();
+
                     const filtered = localProducts.filter(p => 
                         (filter === 'all' || p.type === filter) && 
                         p.title.toLowerCase().includes(keyword.toLowerCase())
@@ -337,7 +400,6 @@
             });
         }
 
-        // 4. Preview & Search
         function openPreview(id) {
             const item = localProducts.find(p => p.id === id);
             if(!item) return;
@@ -361,7 +423,7 @@
         }
 
         document.getElementById('searchInput').addEventListener('input', (e) => {
-            render('all', e.target.value);
+            render(currentFilter, e.target.value);
         });
 
         render();
