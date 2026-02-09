@@ -253,6 +253,261 @@
         @keyframes sheetUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
 
         ::-webkit-scrollbar { width: 0; }
+    </style><!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Kenzie Store | Firebase Liquid Pro</title>
+    <link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet">
+    <style>
+        :root {
+            /* Dark Mode (Default) */
+            --primary: #a29bfe;
+            --accent: #6c5ce7;
+            --dark-bg: #0a0a0c;
+            --bg-gradient: radial-gradient(circle at 50% -20%, #2d3436 0%, #0a0a0c 80%);
+            --text: #ffffff;
+            --glass: rgba(255, 255, 255, 0.03);
+            --liquid-glass: rgba(255, 255, 255, 0.08);
+            --border: rgba(255, 255, 255, 0.1);
+            --card-info: linear-gradient(to top, rgba(0,0,0,0.9) 0%, transparent 100%);
+        }
+
+        body.light-mode {
+            --dark-bg: #f0f2f5;
+            --bg-gradient: radial-gradient(circle at 50% -20%, #ffffff 0%, #f0f2f5 80%);
+            --text: #1a1a1a;
+            --glass: rgba(0, 0, 0, 0.03);
+            --liquid-glass: rgba(255, 255, 255, 0.7);
+            --border: rgba(0, 0, 0, 0.08);
+            --card-info: linear-gradient(to top, rgba(255,255,255,0.95) 0%, transparent 100%);
+        }
+
+        * { 
+            margin: 0; 
+            padding: 0; 
+            box-sizing: border-box; 
+            font-family: 'Inter', -apple-system, sans-serif; 
+        }
+        
+        body { 
+            background: var(--dark-bg); 
+            background-image: var(--bg-gradient);
+            color: var(--text); 
+            padding-bottom: 150px; 
+            min-height: 100vh;
+            overflow-x: hidden;
+            -webkit-tap-highlight-color: transparent;
+            transition: background 0.5s ease, color 0.5s ease;
+        }
+
+        /* --- Theme Toggle Switch (Pindah ke Atas) --- */
+        .theme-switch {
+            width: 40px;
+            height: 40px;
+            background: var(--accent);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 0 8px 15px rgba(108, 92, 231, 0.3);
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            border: none;
+            color: white;
+            flex-shrink: 0;
+            margin-left: 15px;
+        }
+        
+        .theme-switch:active { transform: scale(0.9); }
+        .theme-switch i { font-size: 1.2rem; position: absolute; transition: 0.5s cubic-bezier(0.4, 0, 0.2, 1); }
+        .light-mode .ri-moon-fill { transform: rotate(360deg) scale(0); opacity: 0; }
+        .ri-sun-fill { transform: rotate(-360deg) scale(0); opacity: 0; }
+        .light-mode .ri-sun-fill { transform: rotate(0) scale(1); opacity: 1; }
+
+        /* --- Header --- */
+        header {
+            background: rgba(10, 10, 12, 0);
+            padding: 25px 6%; 
+            display: flex; 
+            justify-content: space-between;
+            align-items: center; 
+            position: sticky; 
+            top: 0; 
+            z-index: 1000;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        header.scrolled {
+            background: var(--liquid-glass);
+            backdrop-filter: blur(25px);
+            -webkit-backdrop-filter: blur(25px);
+            border-bottom: 1px solid var(--border);
+            padding: 15px 6%;
+        }
+
+        .logo { font-weight: 900; font-size: 1.3rem; letter-spacing: 1px; }
+        .logo span { color: var(--primary); }
+
+        .header-actions { display: flex; align-items: center; }
+
+        .search-container { position: relative; width: 140px; }
+        .search-container input {
+            width: 100%; padding: 10px 15px 10px 35px;
+            border-radius: 14px; border: 1px solid var(--border); outline: none;
+            background: var(--glass); color: var(--text); transition: 0.4s; font-size: 0.8rem;
+        }
+        .search-container input:focus { width: 160px; background: rgba(108, 92, 231, 0.1); border-color: var(--primary); }
+        .search-container i { position: absolute; left: 12px; top: 10px; color: #888; }
+
+        /* --- Main Content --- */
+        main { padding: 20px 6%; }
+        .section-header {
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center; 
+            margin-bottom: 25px;
+            animation: fadeIn 0.8s ease;
+        }
+
+        /* --- Filter Button Liquid (BARU) --- */
+        .filter-container {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 30px;
+        }
+
+        .liquid-filter {
+            background: var(--liquid-glass);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid var(--border);
+            padding: 5px;
+            border-radius: 20px;
+            display: flex;
+            width: fit-content;
+        }
+
+        .filter-btn {
+            padding: 10px 20px;
+            border-radius: 16px;
+            border: none;
+            background: transparent;
+            color: var(--text);
+            font-size: 0.85rem;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: 0.3s;
+            opacity: 0.6;
+        }
+
+        .filter-btn.active {
+            background: linear-gradient(135deg, #ff7e5f, #feb47b); /* Gradient sesuai gambar */
+            color: white;
+            opacity: 1;
+            box-shadow: 0 5px 15px rgba(255, 126, 95, 0.3);
+        }
+
+        .filter-btn i { font-size: 1.1rem; }
+
+        /* --- Grid & Card --- */
+        .grid {
+            display: grid; 
+            grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+            gap: 20px; 
+        }
+
+        .item-card {
+            background: var(--glass);
+            border: 1px solid var(--border);
+            border-radius: 28px; 
+            overflow: hidden;
+            transition: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); 
+            cursor: pointer;
+            position: relative;
+            animation: slideUp 0.5s ease backwards;
+        }
+        
+        .item-card:hover { 
+            transform: translateY(-10px) scale(1.02); 
+            background: var(--liquid-glass);
+            border-color: var(--primary);
+            box-shadow: 0 25px 50px rgba(0,0,0,0.2);
+        }
+
+        .img-box { width: 100%; height: 280px; overflow: hidden; position: relative; }
+        .img-box img { width: 100%; height: 100%; object-fit: cover; transition: 0.6s; }
+        .item-card:hover .img-box img { transform: scale(1.15); }
+
+        .tag {
+            position: absolute; top: 15px; left: 15px;
+            background: rgba(0, 0, 0, 0.5); 
+            backdrop-filter: blur(12px);
+            color: #fff;
+            padding: 6px 14px; border-radius: 12px; font-size: 0.6rem; font-weight: 800;
+            border: 1px solid rgba(255,255,255,0.1);
+            text-transform: uppercase;
+            z-index: 2;
+        }
+
+        .item-info { 
+            padding: 20px 15px; 
+            background: var(--card-info); 
+            position: absolute; 
+            bottom: 0; 
+            width: 100%; 
+            z-index: 1;
+        }
+        .item-info h4 { font-size: 0.95rem; font-weight: 600; letter-spacing: 0.5px; }
+
+        /* --- Overlay & Preview --- */
+        .preview-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.8); backdrop-filter: blur(20px);
+            z-index: 2000; display: none; justify-content: center; align-items: flex-end;
+        }
+        .preview-content {
+            width: 100%; max-width: 500px; background: var(--dark-bg);
+            border-radius: 40px 40px 0 0; position: relative;
+            border: 1px solid var(--border);
+            max-height: 90vh; overflow-y: auto;
+            animation: sheetUp 0.4s cubic-bezier(0.215, 0.61, 0.355, 1);
+        }
+        .preview-img { width: 100%; height: 480px; object-fit: cover; border-radius: 0 0 40px 40px; }
+        .preview-details { padding: 35px; }
+
+        .btn-apply {
+            width: 100%; padding: 20px; background: var(--accent);
+            color: white; border: none; border-radius: 22px; cursor: pointer;
+            font-size: 1.1rem; font-weight: 700; display: flex; align-items: center; justify-content: center; gap: 12px;
+            transition: 0.3s;
+        }
+
+        /* --- Bottom Nav --- */
+        .bottom-bar {
+            position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%);
+            background: var(--liquid-glass); 
+            backdrop-filter: blur(30px);
+            -webkit-backdrop-filter: blur(30px);
+            padding: 16px 35px; border-radius: 35px; display: flex; gap: 40px;
+            border: 1px solid var(--border);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.15); z-index: 1500;
+        }
+        .nav-item { text-align: center; color: var(--text); opacity: 0.4; cursor: pointer; transition: 0.3s; }
+        .nav-item.active { color: var(--accent); opacity: 1; transform: translateY(-3px); }
+        .nav-item i { font-size: 1.6rem; }
+        .nav-item span { display: block; font-size: 0.65rem; margin-top: 5px; font-weight: 700; }
+
+        /* Animations */
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        @keyframes slideUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes sheetUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
+
+        ::-webkit-scrollbar { width: 0; }
     </style>
 </head>
 <body>
@@ -320,15 +575,15 @@
 
     <script>
         const firebaseConfig = {
-          apiKey: "AIzaSyDAhN_BxC9c76kB2jzTJ05F0NXX9ZjRYqQ",
-          authDomain: "themestorekenzie.firebaseapp.com",
-          databaseURL: "https://themestorekenzie-default-rtdb.asia-southeast1.firebasedatabase.app",
-          projectId: "themestorekenzie",
-          storageBucket: "themestorekenzie.firebasestorage.app",
-          messagingSenderId: "220524638997",
-          appId: "1:220524638997:web:a7d4860fb6d2b179a9af1c",
-          measurementId: "G-WTR3T92KWS"
-        }; 
+          apiKey: "AIzaSyCk5Jwx893G_2zwLpgptOPhzSgpZ5jdqcc",
+          authDomain: "tempmail-bbf38.firebaseapp.com",
+          databaseURL: "https://tempmail-bbf38-default-rtdb.firebaseio.com",
+          projectId: "tempmail-bbf38",
+          storageBucket: "tempmail-bbf38.firebasestorage.app",
+          messagingSenderId: "381936896824",
+          appId: "1:381936896824:web:7e5e0415cd980a56558fcd",
+          measurementId: "G-80GT4RCLNV"
+        };
         firebase.initializeApp(firebaseConfig);
         const database = firebase.database();
 
